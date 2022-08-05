@@ -34,10 +34,11 @@ Deployment instructions
 
 #. Configure the Attini environment and run the deployment.
 
+   (If you are using the Attini runner, you might need to create the default ECS cluster, just run ``aws ecs create-cluster``)
+
       .. code-block:: bash
 
           attini environment create dev --env-type test
-          # If you are using the Attini runner, you might need to create the default ECS cluster (just run ``aws ecs create-cluster```)
           attini deploy run .
 
 
