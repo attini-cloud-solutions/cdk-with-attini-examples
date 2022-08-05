@@ -51,10 +51,10 @@ we have also:
 #. Added ``**/cdk.out/**`` to .attini-ignore file.
 
 
-.. note::
-  In .attini-ignore we have added a line:
+  .. note::
+    In .attini-ignore we have added a line:
 
     ``**/node_modules/**``
 
-  Because the node modules have "@" in them, which is not compatible with S3 object keys. And all
-  files in an Attini distribution are stored on S3 during deployment.
+    Because the node_modules have ``@`` in them, which is not compatible with S3 object keys. And all
+    files in an Attini distribution are stored on S3 during deployment.
