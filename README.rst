@@ -11,11 +11,11 @@ In this project, we see an examples in reference to the `Attini CDK documentatio
 Deployment instructions
 -------------------------
 
-#. Log in to AWS using AWS CLI
+#. Log in to AWS using AWS CLI.
 
-#. Have AWS CDK installed on your computer (or use a package container, find more info in `attini-config <https://docs.attini.io/api-reference/attini-configuration.html#package>`_)
+#. Have AWS CDK installed on your computer (or use a package container, find more info in `attini-config <https://docs.attini.io/api-reference/attini-configuration.html#package>`_).
 
-#. Install the Attini CLI and Attini Framework:
+#. Install the Attini CLI and Attini Framework.
 
     .. code-block:: bash
 
@@ -24,7 +24,7 @@ Deployment instructions
 
 #. Decide which deployment option (project) you want to use and open a terminal in that directory.
 
-#. Bootstrap the CDK:
+#. Bootstrap the CDK.
 
       .. code-block:: bash
 
