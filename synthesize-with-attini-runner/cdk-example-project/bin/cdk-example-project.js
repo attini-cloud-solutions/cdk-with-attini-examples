@@ -6,9 +6,7 @@ const { DeploymentPlan } = require('../lib/deployment-plan');
 
 const app = new cdk.App();
 new CdkExampleProjectStack(app, 'CdkExampleProjectStack', {
-
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-
 });
 
 const deploymentPlan = new DeploymentPlan(app, 'DeploymentPlan', {});
