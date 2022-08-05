@@ -1,7 +1,7 @@
 cdk-with-attini-examples
 ==========================
 
-In this project, we see an example in reference to Attini CDK documentation so we have 3 examples (attini projects).
+In this project, we see an examples in reference to the `Attini CDK documentation <https://docs.attini.io/knowledge-bank/attini-and-the-aws-cdk.html>`_ so.
 
 #. synthesize-at-package-time
 #. synthesize-and-deploy-with-attini-runner
@@ -32,15 +32,17 @@ Deployment instructions
 The CDK example project
 ---------------------------
 
-These 3 Attini projects includes an example CDK project in the directory "cdk-example-project".
-These projects were generated using the ``cdk init --language=javascript`` command, then we changed a few things.
+These 3 Attini projects include an example CDK project in the directory "cdk-example-project".
+These projects were generated using the ``cdk init --language=javascript`` command.
+
+Then we changed the following:
 
 #. Un-commented the SQS example resource.
 #. Added a Cloud​Formation Output.
 #. Created a deployment-plan template (``lib/deployment-plan.js``).
 
     .. note::
-      The deployment-plan template always have to to environment agnostic so we always synthesize it in the package phase.
+      The deployment-plan template has to be environment agnostic so, we synthesize it in the package phase.
 
 #. Updated ``bin/cdk-example-project.js`` to include our deployment plan.
 
@@ -56,5 +58,5 @@ we have also:
 
     ``**/node_modules/**``
 
-    Because the node_modules have ``@`` in them, which is not compatible with S3 object keys. And all
+    Because the node_modules names have ``@`` in them, which is not compatible with S3 object keys, and all
     files in an Attini distribution are stored on S3 during deployment.

@@ -16,17 +16,17 @@ class DeploymentPlan extends Stack {
       props = {
         type: "Attini::Deploy::DeploymentPlan",
         properties: {
-          "DeploymentPlan": {
+          DeploymentPlan: {
             // From this point, the its normal Amazon state launge but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
-            "StartAt": "Deploy",
-            "States": {
-              "Deploy": {
-                "End": true,
-                "Properties": {
-                  "StackName": "CdkExampleProjectStack",
-                  "Template": "/cdk.out/CdkExampleProjectStack.template.json"
+            StartAt: "Deploy",
+            States: {
+              Deploy: {
+                End: true,
+                Properties: {
+                  StackName: "CdkExampleProjectStack",
+                  Template: "/cdk.out/CdkExampleProjectStack.template.json"
                 },
-                "Type": "AttiniCfn"
+                Type: "AttiniCfn"
               }
             }
           }
