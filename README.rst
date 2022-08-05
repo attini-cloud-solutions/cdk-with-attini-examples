@@ -22,11 +22,23 @@ Deployment instructions
         /bin/bash -c "$(curl -fsSL https://docs.attini.io/blob/attini-cli/install-cli.sh)"
         attini setup --give-admin-access --create-deployment-plan-default-role --create-init-deploy-default-role --accept-license-agreement
 
-#. Decide which deployment option (project) you want to use and open a terminal in that directory, then run:
+#. Decide which deployment option (project) you want to use and open a terminal in that directory.
 
-    .. code-block:: bash
+#. Bootstrap the CDK:
 
-        attini deploy run .
+      .. code-block:: bash
+
+          cd cdk-example-project
+          cdk bootstrap
+          cd ..
+
+#. Configure the Attini environment and run the deployment.
+
+      .. code-block:: bash
+
+          attini environment create dev --env-type test
+          # If you are using the Attini runner, you might need to create the default ECS cluster (just run ``aws ecs create-cluster```)
+          attini deploy run .
 
 
 The CDK example project

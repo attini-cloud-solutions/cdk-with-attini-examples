@@ -118,7 +118,7 @@ class DeploymentPlan extends Stack {
           Installation: {
             // Workaround for bug, split into multible lines later.
             Commands: [
-              "yum install -y amazon-linux-extras tar gzip unzip jq; curl -sL https://rpm.nodesource.com/setup_16.x | bash -; yum install -y nodejs; npm install -g aws-cdk;"
+              "yum install -y amazon-linux-extras tar gzip unzip jq; curl -sL https://rpm.nodesource.com/setup_16.x | bash -; yum install -y nodejs; npm install -g aws-cdk"
             ]
           }
         }
