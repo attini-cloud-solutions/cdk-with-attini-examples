@@ -1,0 +1,21 @@
+# https://docs.attini.io/api-reference/attini-configuration.html
+distributionName: synthesize-and-deploy-with-attini-runner
+
+package: # When you use the Attini CLI to "package" a distribution, these instructions will be used, find more info here https://docs.attini.io/api-reference/attini-configuration.html
+  prePackage:
+    commands: # These shell commands will be executed on a temporary copy of your files so they will not affect your source files
+
+      - attini configure set-dist-id --random
+
+      - cd cdk-example-project
+      - npm install
+      - cdk synth DeploymentPlan > ../deployment-plan.yaml  # synthesize the deployment-plan
+
+  # container: # See CLI flaggs --container-build and --container-repository-login to use a build image
+  #   image: public.ecr.aws/amazonlinux/amazonlinux:latest # add your build image here
+  #   loginCommands:
+  #     - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+
+initDeployConfig:
+  template: deployment-plan.yaml
+  stackName: ${environment}-${distributionName}-deployment-plan
