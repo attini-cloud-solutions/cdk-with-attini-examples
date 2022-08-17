@@ -1,5 +1,5 @@
 # https://docs.attini.io/api-reference/attini-configuration.html
-distributionName: synthesize-at-package-time
+distributionName: synthesize-during-attini-package
 
 package: # When you use the Attini CLI to "package" a distribution, these instructions will be used, find more info here https://docs.attini.io/api-reference/attini-configuration.html
   prePackage:
