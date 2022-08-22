@@ -1,8 +1,7 @@
 const {
   Stack,
   CfnResource,
-  Fn,
-  RemovalPolicy
+  Fn
 } = require('aws-cdk-lib');
 
 

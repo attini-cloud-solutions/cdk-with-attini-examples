@@ -1,5 +1,4 @@
-const { Stack, Duration, CfnOutput, CfnResource } = require('aws-cdk-lib');
-const sqs = require('aws-cdk-lib/aws-sqs');
+const { Stack, CfnResource } = require('aws-cdk-lib');
 
 class DeploymentPlan extends Stack {
   /**
