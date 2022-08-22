@@ -32,16 +32,6 @@ class DeploymentPlan extends Stack {
           }
         }
       })
-
-    // example resource
-    const queue = new sqs.Queue(this, 'CdkExampleProjectQueue', {
-      visibilityTimeout: Duration.seconds(300)
-    });
-
-    new CfnOutput(this, 'queueName', {
-      value: queue.queueName,
-      description: 'Queue name'
-    });
   }
 }
 
