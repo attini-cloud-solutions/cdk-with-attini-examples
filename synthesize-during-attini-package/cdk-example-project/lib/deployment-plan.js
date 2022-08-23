@@ -16,7 +16,7 @@ class DeploymentPlan extends Stack {
         type: "Attini::Deploy::DeploymentPlan",
         properties: {
           DeploymentPlan: {
-            // From this point, the its normal Amazon state launge but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
+            // From this point, the its normal Amazon state language but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
             StartAt: "Deploy",
             States: {
               Deploy: {

@@ -25,7 +25,7 @@ class DeploymentPlan extends Stack {
         type: "Attini::Deploy::DeploymentPlan",
         properties: {
           DeploymentPlan: {
-            // From this point, its normal Amazon state launge but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
+            // From this point, its normal Amazon state language but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
             StartAt: "SynthAndDeploy",
             States: {
               SynthAndDeploy: {
@@ -115,10 +115,12 @@ class DeploymentPlan extends Stack {
             LogLevel: "INFO",
             MaxConcurrentJobs: 5
           },
-          Installation: {
-            // Workaround for bug, split into multible lines later.
+          Startup: {
             Commands: [
-              "yum install -y amazon-linux-extras tar gzip unzip jq; curl -sL https://rpm.nodesource.com/setup_16.x | bash -; yum install -y nodejs; npm install -g aws-cdk"
+              "yum install -y amazon-linux-extras tar gzip unzip jq;",
+              "curl -sL https://rpm.nodesource.com/setup_16.x | bash -;",
+              "yum install -y nodejs;",
+              "npm install -g aws-cdk"
             ]
           }
         }
