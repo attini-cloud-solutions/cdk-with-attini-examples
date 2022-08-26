@@ -3,7 +3,7 @@ cdk-with-attini-examples
 
 In this project, we see an examples in reference to the `Attini CDK documentation <https://docs.attini.io/knowledge-bank/attini-and-the-aws-cdk.html>`_.
 
-#. synthesize-during-attini-package
+#. synthesize-with-attini-package
 #. synthesize-and-deploy-with-attini-runner
 #. synthesize-with-attini-runner
 
