@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 const cdk = require('aws-cdk-lib');
-const { CdkExampleProjectStack } = require('../lib/cdk-example-project-stack');
+const { CdkExampleProjectStack } = require('../lib/cdk-example-sqs');
 const { DeploymentPlan } = require('../lib/deployment-plan');
 
 const app = new cdk.App();
-new CdkExampleProjectStack(app, 'CdkExampleProjectStack', {
+new CdkExampleProjectStack(app, 'CdkExampleSQS', {
 
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,

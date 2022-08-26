@@ -17,15 +17,26 @@ class DeploymentPlan extends Stack {
         properties: {
           DeploymentPlan: {
             // From this point, the its normal Amazon state language but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
-            StartAt: "Deploy",
+            StartAt: "deploySQS",
             States: {
-              Deploy: {
-                End: true,
+              deploySQS: {
+                Type: "AttiniCfn",
                 Properties: {
-                  StackName: "CdkExampleProjectStack",
-                  Template: "/cdk.out/CdkExampleProjectStack.template.json"
+                  StackName: "CdkExampleSQS",
+                  Template: "/cdk.out/CdkExampleSQS.template.json"
                 },
-                Type: "AttiniCfn"
+                Next: "deploySNS"
+              },
+              deploySNS: {
+                Type: "AttiniCfn",
+                Properties: {
+                  StackName: "LegacySNS",
+                  Template: "/legacy-cfn-template.yaml",
+                  Parameters: {
+                      "SqsArn.$": "$.output.deploySQS.queueArn"
+                  }
+                },
+                End: true
               }
             }
           }
