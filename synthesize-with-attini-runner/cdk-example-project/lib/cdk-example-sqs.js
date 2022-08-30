@@ -3,7 +3,7 @@ const sqs = require('aws-cdk-lib/aws-sqs');
 const iam = require('aws-cdk-lib/aws-iam');
 
 
-class CdkExampleProjectStack extends Stack {
+class CdkExampleSQS extends Stack {
   /**
    *
    * @param {Construct} scope
@@ -34,4 +34,4 @@ class CdkExampleProjectStack extends Stack {
   }
 }
 
-module.exports = { CdkExampleProjectStack }
+module.exports = { CdkExampleSQS }

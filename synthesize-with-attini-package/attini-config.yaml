@@ -8,7 +8,7 @@ package: # When you use the Attini CLI to "package" a distribution, these instru
 
       - cd cdk-example-project
       - npm install
-      - cdk synth --output ../cdk.out --quiet  # synthesize the deployment-plan
+      - cdk synth --output ../cdk.out DeploymentPlan > ../deployment-plan.yaml
 
   # container: # See CLI flaggs --container-build and --container-repository-login to use a build image
   #   image: public.ecr.aws/attini/attini-labs:attini-and-cdk-example-2022-08-22 # add your build image here
@@ -16,5 +16,5 @@ package: # When you use the Attini CLI to "package" a distribution, these instru
   #     - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 
 initDeployConfig:
-  template: /cdk.out/DeploymentPlan.template.json
+  template: /deployment-plan.yaml
   stackName: ${environment}-${distributionName}-deployment-plan

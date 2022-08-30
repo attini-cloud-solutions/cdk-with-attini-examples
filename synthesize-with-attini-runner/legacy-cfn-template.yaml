@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: This is an exampel stack contining a SNS topic that push to to an SQS queue.
+
+Parameters:
+
+  SqsArn:
+    Type: String
+    Description: Arn of and SQS queue
+
+Resources:
+
+  SnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref SqsArn
+          Protocol: sqs

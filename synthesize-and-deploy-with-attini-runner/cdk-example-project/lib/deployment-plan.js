@@ -26,17 +26,28 @@ class DeploymentPlan extends Stack {
         properties: {
           DeploymentPlan: {
             // From this point, its normal Amazon state language but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
-            StartAt: "SynthAndDeploy",
+            StartAt: "SynthAndDeploySQS",
             States: {
-              SynthAndDeploy: {
+              SynthAndDeploySQS: {
                 Type: "AttiniRunnerJob",
                 Properties: {
                   Runner: "ProjectRunner",
                   Commands: [
                     "cd cdk-example-project",
                     "npm install",
-                    "cdk deploy CdkExampleProjectStack --require-approval never --outputs-file ${ATTINI_OUTPUT}"
+                    "cdk deploy CdkExampleSQS --require-approval never --outputs-file ${ATTINI_OUTPUT}"
                   ]
+                },
+                Next: "DeploySNS"
+              },
+              DeploySNS: {
+                Type: "AttiniCfn",
+                Properties: {
+                  StackName: "LegacySNS",
+                  Template: "/legacy-cfn-template.yaml",
+                  Parameters: {
+                    "SqsArn.$": "$.output.SynthAndDeploySQS.CdkExampleSQS.queueArn"
+                  }
                 },
                 End: true
               }
@@ -65,6 +76,7 @@ class DeploymentPlan extends Stack {
       ],
     });
 
+
     const runnerRole = new iam.Role(this, 'Role', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
       description: 'Attini runner execution role',
@@ -86,22 +98,7 @@ class DeploymentPlan extends Stack {
       memoryLimitMiB: 512,
       cpu: 256,
       executionRole: runnerRole,
-      taskRole: runnerRole,
-      runtimePlatform: {
-        operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
-        cpuArchitecture: ecs.CpuArchitecture.ARM64,
-      },
-    });
-
-    runnerTaskDefinition.addContainer("RunnerTaskDefinition", {
-      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/amazonlinux/amazonlinux:latest"),
-      environment: {
-        "ATTINI_SCRIPT_TIMEOUT": "20"
-      },
-      logging: ecs.LogDrivers.awsLogs({
-        logRetention: logs.RetentionDays.ONE_MONTH,
-        streamPrefix: "attini"
-      }),
+      taskRole: runnerRole
     });
 
     new CfnResource(this, "ProjectRunner",
@@ -115,17 +112,30 @@ class DeploymentPlan extends Stack {
             LogLevel: "INFO",
             MaxConcurrentJobs: 5
           },
-          Startup: {
-            Commands: [
-              "yum install -y amazon-linux-extras tar gzip unzip jq;",
-              "curl -sL https://rpm.nodesource.com/setup_16.x | bash -;",
-              "yum install -y nodejs;",
-              "npm install -g aws-cdk"
-            ]
-          }
+          // If you want your own continer, you need this softwere installed
+          // Startup: {
+          //   Commands: [
+          //     "yum install -y amazon-linux-extras tar gzip unzip jq;",
+          //     "curl -sL https://rpm.nodesource.com/setup_16.x | bash -;",
+          //     "yum install -y nodejs;",
+          //     "npm install -g aws-cdk"
+          //   ]
+          // }
         }
       }
     )
+
+    runnerTaskDefinition.addContainer("RunnerTaskDefinition", {
+      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/attini/attini-labs:attini-and-cdk-example-2022-08-22"),
+      environment: {
+        "ATTINI_SCRIPT_TIMEOUT": "20"
+      },
+      logging: ecs.LogDrivers.awsLogs({
+        logRetention: logs.RetentionDays.ONE_MONTH,
+        streamPrefix: "attini"
+      }),
+    });
+
   }
 }
 

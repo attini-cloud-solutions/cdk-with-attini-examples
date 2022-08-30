@@ -27,9 +27,9 @@ class DeploymentPlan extends Stack {
         properties: {
           DeploymentPlan: {
             // From this point, its normal Amazon state language but with support for attini types https://docs.attini.io/api-reference/deployment-plan-types.html
-            StartAt: "Synth",
+            StartAt: "SynthSQS",
             States: {
-              Synth: {
+              SynthSQS: {
                 Type: "AttiniRunnerJob",
                 Properties: {
                   Runner: "ProjectRunner",
@@ -39,18 +39,29 @@ class DeploymentPlan extends Stack {
                     "cdk synth --quiet",
                     // The articat namesapce in attini artifact store (s3)
                     "DEPLOYMENT_NAMESPACE=${ATTINI_ARTIFACT_STORE}/${ATTINI_ENVIRONMENT_NAME}/${ATTINI_DISTRIBUTION_NAME}/${ATTINI_DISTRIBUTION_ID}",
-                    "TEMPL_S3_PATH=s3://${DEPLOYMENT_NAMESPACE}/CdkExampleProjectStack.template.json",
+                    "TEMPL_S3_PATH=s3://${DEPLOYMENT_NAMESPACE}/CdkExampleSQS.template.json",
 
-                    "aws s3 cp cdk.out/CdkExampleProjectStack.template.json ${TEMPL_S3_PATH}"
+                    "aws s3 cp cdk.out/CdkExampleSQS.template.json ${TEMPL_S3_PATH}"
                   ]
                 },
-                Next: "Deploy"
+                Next: "DeploySQS"
               },
-              Deploy: {
+              DeploySQS: {
                 Type: "AttiniCfn",
                 Properties: {
-                  Template: "/../CdkExampleProjectStack.template.json",
-                  StackName: "CdkExampleProjectStack"
+                  Template: "/../CdkExampleSQS.template.json",
+                  StackName: "CdkExampleSQS"
+                },
+                Next: "DeploySNS"
+              },
+              DeploySNS: {
+                Type: "AttiniCfn",
+                Properties: {
+                  StackName: "LegacySNS",
+                  Template: "/legacy-cfn-template.yaml",
+                  Parameters: {
+                    "SqsArn.$": "$.output.DeploySQS.queueArn"
+                  }
                 },
                 End: true
               }
@@ -96,15 +107,11 @@ class DeploymentPlan extends Stack {
       memoryLimitMiB: 512,
       cpu: 256,
       executionRole: runnerRole,
-      taskRole: runnerRole,
-      runtimePlatform: {
-        operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
-        cpuArchitecture: ecs.CpuArchitecture.ARM64,
-      },
+      taskRole: runnerRole
     });
 
-    const container = runnerTaskDefinition.addContainer("RunnerTaskDefinition", {
-      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/amazonlinux/amazonlinux:latest"),
+    runnerTaskDefinition.addContainer("RunnerTaskDefinition", {
+      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/attini/attini-labs:attini-and-cdk-example-2022-08-22"),
       environment: {
         "ATTINI_SCRIPT_TIMEOUT": "20"
       },
@@ -125,16 +132,16 @@ class DeploymentPlan extends Stack {
             LogLevel: "INFO",
             MaxConcurrentJobs: 5
           },
-          Startup: {
-            Commands: [
-              "yum install -y amazon-linux-extras tar gzip unzip jq",
-              "curl -sL https://rpm.nodesource.com/setup_16.x | bash -",
-              "yum install -y nodejs",
-              "npm install -g aws-cdk",
-              "curl 'https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip' -o 'awscliv2.zip'",
-              "unzip awscliv2.zip; ./aws/install"
-            ]
-          }
+        //   Startup: {
+        //     Commands: [
+        //       "yum install -y amazon-linux-extras tar gzip unzip jq",
+        //       "curl -sL https://rpm.nodesource.com/setup_16.x | bash -",
+        //       "yum install -y nodejs",
+        //       "npm install -g aws-cdk",
+        //       "curl 'https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip' -o 'awscliv2.zip'",
+        //       "unzip awscliv2.zip; ./aws/install"
+        //     ]
+        //   }
         }
       }
     )

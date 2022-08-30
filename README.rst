@@ -1,7 +1,7 @@
 cdk-with-attini-examples
 ==========================
 
-In this project, we see an examples in reference to the `Attini CDK documentation <https://docs.attini.io/knowledge-bank/attini-and-the-aws-cdk.html>`_.
+In this project, we see examples in reference to the `Attini CDK documentation <https://docs.attini.io/knowledge-bank/attini-and-the-aws-cdk.html>`_.
 
 #. synthesize-with-attini-package
 #. synthesize-and-deploy-with-attini-runner
@@ -24,7 +24,7 @@ Deployment instructions
 
 #. Decide which deployment option (project) you want to use and open a terminal in that directory.
 
-#. Bootstrap the CDK.
+#. Bootstrap the CDK (only needed the first time you deploy a CDK app in your account and region)
 
       .. code-block:: bash
 
@@ -34,7 +34,7 @@ Deployment instructions
 
 #. Configure the Attini environment and run the deployment.
 
-   (If you are using the Attini runner, you might need to create the default ECS cluster, just run ``aws ecs create-cluster``)
+   (If you are using the Attini runner, you might need to create the default ECS cluster by running ``aws ecs create-cluster``)
 
       .. code-block:: bash
 
@@ -73,3 +73,10 @@ we have also:
 
     Because the node_modules names have ``@`` in them, which is not compatible with S3 object keys, and all
     files in an Attini distribution are stored on S3 during deployment.
+
+
+Traditional Cloud​Formation stack
+##############################################
+
+To show how you can use Attini to integrate a CDK app with traditional Cloud​Formation stacks
+have also added a template that creates an SNS topic, which punches messages to the CDK SQS queue.
