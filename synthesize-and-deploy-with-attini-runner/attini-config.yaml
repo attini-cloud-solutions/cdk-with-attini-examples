@@ -9,6 +9,7 @@ package: # When you use the Attini CLI to "package" a distribution, these instru
 
       - cd cdk-example-project
       - npm install
+      - npm test
       - cdk synth DeploymentPlan > ../deployment-plan.yaml  # synthesize the deployment-plan
 
   # container: # See CLI flaggs --container-build and --container-repository-login to use a build image

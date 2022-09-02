@@ -93,7 +93,6 @@ class DeploymentPlan extends Stack {
       }
     });
 
-
     const runnerTaskDefinition = new ecs.FargateTaskDefinition(this, 'RunnerTaskDefinition', {
       memoryLimitMiB: 512,
       cpu: 256,
@@ -127,9 +126,6 @@ class DeploymentPlan extends Stack {
 
     runnerTaskDefinition.addContainer("RunnerTaskDefinition", {
       image: ecs.ContainerImage.fromRegistry("public.ecr.aws/attini/attini-labs:attini-and-cdk-example-2022-08-22"),
-      environment: {
-        "ATTINI_SCRIPT_TIMEOUT": "20"
-      },
       logging: ecs.LogDrivers.awsLogs({
         logRetention: logs.RetentionDays.ONE_MONTH,
         streamPrefix: "attini"
