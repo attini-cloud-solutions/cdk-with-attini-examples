@@ -37,7 +37,7 @@ class DeploymentPlan extends Stack {
                     "cd cdk-example-project",
                     "npm install",
                     "cdk synth --quiet",
-                    // The articat namesapce in attini artifact store (s3)
+                    // The artifact namespace in attini artifact store (s3)
                     "DEPLOYMENT_NAMESPACE=${ATTINI_ARTIFACT_STORE}/${ATTINI_ENVIRONMENT_NAME}/${ATTINI_DISTRIBUTION_NAME}/${ATTINI_DISTRIBUTION_ID}",
                     "TEMPL_S3_PATH=s3://${DEPLOYMENT_NAMESPACE}/CdkExampleSQS.template.json",
 
@@ -88,6 +88,7 @@ class DeploymentPlan extends Stack {
       ],
     });
 
+
     const runnerRole = new iam.Role(this, 'Role', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
       description: 'Attini runner execution role',
@@ -110,6 +111,7 @@ class DeploymentPlan extends Stack {
       taskRole: runnerRole
     });
 
+
     runnerTaskDefinition.addContainer("RunnerTaskDefinition", {
       image: ecs.ContainerImage.fromRegistry("public.ecr.aws/attini/attini-labs:attini-and-cdk-example-2022-08-22"),
       logging: ecs.LogDrivers.awsLogs({
@@ -118,6 +120,7 @@ class DeploymentPlan extends Stack {
       }),
     });
 
+
     new CfnResource(this, "ProjectRunner",
       props = {
         type: "Attini::Deploy::Runner",
@@ -125,20 +128,7 @@ class DeploymentPlan extends Stack {
           TaskDefinitionArn: Fn.ref(runnerTaskDefinition.node.defaultChild.logicalId).toString(),
           RunnerConfiguration: {
             IdleTimeToLive: 600,
-            JobTimeout: 3600,
-            LogLevel: "INFO",
-            MaxConcurrentJobs: 5
           },
-        //   Startup: {
-        //     Commands: [
-        //       "yum install -y amazon-linux-extras tar gzip unzip jq",
-        //       "curl -sL https://rpm.nodesource.com/setup_16.x | bash -",
-        //       "yum install -y nodejs",
-        //       "npm install -g aws-cdk",
-        //       "curl 'https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip' -o 'awscliv2.zip'",
-        //       "unzip awscliv2.zip; ./aws/install"
-        //     ]
-        //   }
         }
       }
     )

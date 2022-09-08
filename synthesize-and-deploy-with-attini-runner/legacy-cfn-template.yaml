@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: This is an exampel stack contining a SNS topic that push to to an SQS queue.
+Description: This example stack contains an SNS topic that pushes to an SQS queue.
 
 Parameters:
 
