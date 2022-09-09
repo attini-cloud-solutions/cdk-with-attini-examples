@@ -44,14 +44,43 @@ class DeploymentPlan extends Stack {
                     "aws s3 cp cdk.out/CdkExampleSQS.template.json ${TEMPL_S3_PATH}"
                   ]
                 },
-                Next: "DeploySQS"
+                Next: "ParallelAction"
               },
-              DeploySQS: {
-                Type: "AttiniCfn",
-                Properties: {
-                  Template: "/../CdkExampleSQS.template.json",
-                  StackName: "CdkExampleSQS"
-                },
+              ParallelAction: {
+                Type: "Parallel",
+                Branches: [
+                  {
+                    StartAt: "DeploySQS",
+                    States: {
+                      DeploySQS: {
+                        Type: "AttiniCfn",
+                        Properties: {
+                          Template: "/../CdkExampleSQS.template.json",
+                          StackName: "CdkExampleSQS"
+                        },
+                        End: true
+                      },
+                    }
+                  },
+                  {
+                    StartAt: "DeploySQS In Stockholm",
+                    States: {
+                      "DeploySQS In Stockholm": {
+                        Type: "AttiniCfn",
+                        Properties: {
+                          Template: "/../CdkExampleSQS.template.json",
+                          StackName: "CdkExampleSQS",
+                          Region: "eu-north-1"
+                        },
+                        End: true
+                      },
+                    }
+                  }
+                ],
+                Next: "MergeOutput"
+              },
+              MergeOutput: {
+                Type: "AttiniMergeOutput",
                 Next: "DeploySNS"
               },
               DeploySNS: {
@@ -60,7 +89,8 @@ class DeploymentPlan extends Stack {
                   StackName: "LegacySNS",
                   Template: "/legacy-cfn-template.yaml",
                   Parameters: {
-                    "SqsArn.$": "$.output.DeploySQS.queueArn"
+                    "SqsArn.$": "$.output.DeploySQS.queueArn",
+                    "SqsArnStockholm.$": "$['output']['DeploySQS In Stockholm']['queueArn']"
                   }
                 },
                 End: true
@@ -77,7 +107,7 @@ class DeploymentPlan extends Stack {
           actions: [
             "s3:PutObject"
           ],
-          resources: [ `arn:aws:s3:::attini-artifact-store-${this.region}-${this.account}/*` ],
+          resources: [`arn:aws:s3:::attini-artifact-store-${this.region}-${this.account}/*`],
         }),
         new iam.PolicyStatement({
           actions: [

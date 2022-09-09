@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: Arn of and SQS queue
 
+  SqsArnStockholm:
+    Type: String
+    Description: Arn of and SQS queue
+
 Resources:
 
   SnsTopic:
@@ -15,4 +19,6 @@ Resources:
     Properties:
       Subscription:
         - Endpoint: !Ref SqsArn
+          Protocol: sqs
+        - Endpoint: !Ref SqsArnStockholm
           Protocol: sqs
