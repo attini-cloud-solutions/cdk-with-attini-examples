@@ -125,7 +125,7 @@ class DeploymentPlan extends Stack {
     )
 
     runnerTaskDefinition.addContainer("RunnerTaskDefinition", {
-      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/attini/attini-labs:attini-and-cdk-example-2022-08-22"),
+      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/attini/attini-labs:attini-and-cdk-example-2022-10-03"),
       logging: ecs.LogDrivers.awsLogs({
         logRetention: logs.RetentionDays.ONE_MONTH,
         streamPrefix: "attini"
